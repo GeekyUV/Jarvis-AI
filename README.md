@@ -1,105 +1,53 @@
-# Voice-Activated-AI-Desktop-Assistant-JARVIS-Using-Python
-- a virtual assistant based on AI which  can send email, play music, Search on Google/Wikipedia etc. built using various Functions, libraries and Modules  in Python and Microsoft developed Speech API (sapi5)
-import pyttsx3
-import speech_recognition as sr
-import datetime
-import wikipedia
-import webbrowser
-import os
-import smtplib
 
-engine = pyttsx3.init("sapi5")
-voices= engine.getProperty('voices')
-#print(voices[0].id)
-engine.setProperty('voice', voices[0].id)
-
-
-def speak(audio):
-    engine.say(audio)
-    engine.runAndWait()
-
-def wishme():
-    hour = int(datetime.datetime.now().hour)
-    if hour>=0 and hour<12:
-        speak("Good Morning!")
-
-    elif hour>=12 and hour<18:
-        speak("Good Afternoon")
-    else:
-        speak("Good Evening")
-    speak("I am Jarvis sir,Please tell me how may i help you")
-
-def takeCommand():
-
-
-    r = sr.Recognizer()
-    with sr.Microphone() as source:
-        print("Listening...")
-        r.pause_threshold = 1
-        audio = r.listen(source)
-    try:
-        print("Recognizing...")
-        query = r.recognize_google(audio, language='en-in')  # Using google for voice recognition.
-        print(f"User said: {query}\n")  # User query will be printed.
-
-    except Exception as e:
-        # print(e)
-        print("Say that again please...")  # Say that again will be printed in case of improper voice
-        return "None"  # None string will be returned
-    return query
+# AI ASSISTANT
+Jarvis is a simple voice assistant program built using Python. It can perform various tasks based on voice commands, such as searching Wikipedia, opening websites, playing music, checking the time, sending emails, and more.
 
 
 
-def sendEmail(to,content):
-    server = smtplib.SMTP("smtp.gmail.com",587)
-    server.ehlo()
-    server.starttls()
-    server.login("youremail@gmail.com","your-password here")
-    server.sendmail("youremail@gmail.com",to,content)
 
-if __name__=="__main__" :
-    wishme()
-    while True:
-        query=takeCommand().lower()
+## Prerequisites
 
-        if 'wikipedia' in query:  # if wikipedia found in the query then this block will be executed
-            speak('Searching Wikipedia...')
-            query = query.replace("wikipedia", "")
-            results = wikipedia.summary(query, sentences=2)
-            speak("According to Wikipedia")
-            print(results)
-            speak(results)
+Before running the Jarvis Voice Assistant, ensure you have the following dependencies installed:
 
-        elif 'open youtube' in query:
-            webbrowser.open("youtube.com")
+```bash
+- Python 3.x
+- `pyttsx3`
+- `speech_recognition`
+- `wikipedia`
+- `smtplib
+```
 
-        elif 'open google' in query:
-            webbrowser.open("google.com")
+You can install these dependencies using the following command:
 
 
-        elif 'play music' in query:
-            music_dir = "E:\Music"
-            songs = os.listdir(music_dir)
-            print(songs)
-            os.startfile(os.path.join(music_dir, songs[0]))
+```bash
+pip install pyttsx3 speech_recognition wikipedia
+
+```
+## Installation
+
+```bash
+
+1. git clone https://github.com/your-username/Jarvis-AI.git
+
+2. cd Jarvis-Voice-Assistant
+
+3. Run the jarvis.py script:  python jarvis.py
+
+```
+
+## Usage
+
+Once you've set up the Jarvis Voice Assistant, you can interact with it using voice commands. When you run the jarvis.py script, Jarvis will greet you and wait for your command. Speak your command clearly, and Jarvis will execute the corresponding action.
 
 
-        elif 'the time' in query:
-            strTime = datetime.datetime.now().strftime("%H:%M:%S")
-            speak(f"Sir, the time is {strTime}")
+## Supported Commands
 
-        elif 'open code' in query:
-            codePath = "C:\\Program Files\\JetBrains\\PyCharm Community Edition 2021.2.3\\bin\\ycharm64.exe"
-            os.startfile(codePath)
+- Wikipedia Search: Ask Jarvis to search for information on Wikipedia.
+- Open YouTube: Instruct Jarvis to open the YouTube website.
+- Open Google: Ask Jarvis to open the Google search engine.
+- Play Music: Play a random music track from the specified music directory.
+- Check Time: Jarvis will tell you the current time.
+- Open Code: Open a specified code editor (e.g., PyCharm) using its path.
+- Send Email: Send an email to a predefined recipient (currently set to 'harry').
 
-
-        elif 'email to harry' in query:
-            try:
-                speak("What should I say?")
-                content = takeCommand()
-                to = "YuvrajyourEmail@gmail.com"
-                sendEmail(to, content)
-                speak("Email has been sent!")
-            except Exception as e:
-                print(e)
-                speak("Sorry my friend Yuvraj. I am not able to send this email")
